@@ -17,4 +17,8 @@ public class BlogUserMapper {
     public BlogUser toEntity(BlogUserDto dto) {
         return modelMapper.map(dto, BlogUser.class);
     }
+
+    public void updateEntity(BlogUserDto dto, BlogUser user) {
+        modelMapper.map(dto, user);
+    }
 }
