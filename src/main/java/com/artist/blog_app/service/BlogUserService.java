@@ -1,6 +1,7 @@
 package com.artist.blog_app.service;
 
 import com.artist.blog_app.entities.BlogUser;
+import com.artist.blog_app.exceptions.ResourceNotFoundException;
 import com.artist.blog_app.mapper.BlogUserMapper;
 import com.artist.blog_app.payload.BlogUserDto;
 import com.artist.blog_app.repository.BlogUserRepository;
@@ -16,25 +17,38 @@ public class BlogUserService {
     private final BlogUserRepository blogUserRepository;
     private final BlogUserMapper mapper;
 
-    BlogUserDto createBlogUser(BlogUserDto user){
+    public BlogUserDto createBlogUser(BlogUserDto user){
         BlogUser blogUser = mapper.toEntity(user);
         blogUserRepository.save(blogUser);
+
         return mapper.toDto(blogUser);
     }
 
-    BlogUserDto updateBlogUser(BlogUserDto blogUserDto, Integer id){
-        return null;
+    public BlogUserDto updateBlogUser(BlogUserDto blogUserDto, Integer id){
+        var existingBlogUser = blogUserRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User ","UserId",id));
+
+        mapper.updateEntity(blogUserDto,existingBlogUser);
+        blogUserRepository.save(existingBlogUser);
+
+        return mapper.toDto(existingBlogUser);
     }
 
-    BlogUserDto getBlogUserById(Integer id){
-        return null;
+    public BlogUserDto getBlogUserById(Integer id){
+        var blogUser = blogUserRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User ","UserId",id));
+
+        return mapper.toDto(blogUser);
     }
 
-    List<BlogUserDto> getAllBlogUsers(){
-        return List.of();
+    public List<BlogUserDto> getAllBlogUsers(){
+        return blogUserRepository.findAll()
+                .stream()
+                .map(mapper::toDto)
+                .toList();
     }
 
-    String deleteBlogUser(Integer id){
+    public String deleteBlogUser(Integer id){
         blogUserRepository.deleteById(id);
         return "Successfully deleted";
     }
