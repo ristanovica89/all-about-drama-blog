@@ -4,7 +4,9 @@ import com.artist.blog_app.entities.BlogUser;
 import com.artist.blog_app.payload.BlogUserDto;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 @AllArgsConstructor
 public class BlogUserMapper {
 

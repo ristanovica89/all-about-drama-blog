@@ -48,9 +48,8 @@ public class BlogUserService {
                 .toList();
     }
 
-    public String deleteBlogUser(Integer id){
+    public void deleteBlogUser(Integer id){
         blogUserRepository.deleteById(id);
-        return "Successfully deleted";
     }
 
 }
