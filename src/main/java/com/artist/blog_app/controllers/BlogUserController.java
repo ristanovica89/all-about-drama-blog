@@ -1,5 +1,6 @@
 package com.artist.blog_app.controllers;
 
+import com.artist.blog_app.payload.ApiResponse;
 import com.artist.blog_app.payload.BlogUserDto;
 import com.artist.blog_app.service.BlogUserService;
 import lombok.AllArgsConstructor;
@@ -49,10 +50,10 @@ public class BlogUserController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteUserById(@PathVariable Integer id){
+    public ResponseEntity<ApiResponse> deleteUserById(@PathVariable Integer id){
         blogUserService.deleteBlogUser(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new ApiResponse("Successfully deleted",true));
     }
 
 
