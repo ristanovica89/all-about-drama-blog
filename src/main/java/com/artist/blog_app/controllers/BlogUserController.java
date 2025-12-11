@@ -3,6 +3,7 @@ package com.artist.blog_app.controllers;
 import com.artist.blog_app.payload.ApiResponse;
 import com.artist.blog_app.payload.BlogUserDto;
 import com.artist.blog_app.service.BlogUserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class BlogUserController {
     }
 
     @PostMapping()
-    public ResponseEntity<BlogUserDto> createUser(@RequestBody BlogUserDto user){
+    public ResponseEntity<BlogUserDto> createUser(@Valid @RequestBody BlogUserDto user){
         var newUser = blogUserService.createBlogUser(user);
 
         return ResponseEntity
@@ -42,7 +43,7 @@ public class BlogUserController {
 
     @PutMapping("{id}")
     public ResponseEntity<BlogUserDto> updateUserById(@PathVariable Integer id,
-                                                      @RequestBody BlogUserDto user){
+                                                     @Valid @RequestBody BlogUserDto user){
         var updatedUser = blogUserService.updateBlogUser(user, id);
 
         return ResponseEntity.ok(updatedUser);
