@@ -6,7 +6,6 @@ import com.artist.blog_app.service.BlogUserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriBuilder;
 
 import java.net.URI;
 import java.util.List;
