@@ -1,8 +1,14 @@
 package com.artist.blog_app.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Table(name = "categories")
 public class Category {
 
@@ -10,9 +16,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer categoryId;
 
-    @Column(name = "title")
-    private String categoryTitle;
+    private String title;
 
-    @Column(name = "description")
-    private String categoryDescription;
+    private String description;
 }
