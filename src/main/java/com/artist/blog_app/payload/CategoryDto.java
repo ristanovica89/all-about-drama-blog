@@ -1,7 +1,7 @@
 package com.artist.blog_app.payload;
 
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -13,10 +13,10 @@ public class CategoryDto {
 
     private Integer categoryId;
 
-    @NotEmpty
+    @NotBlank
     private String title;
 
-    @NotEmpty
+    @NotBlank
     @Size(max = 200, message = "The description must not be more than 200 characters long.")
     private String description;
 }
