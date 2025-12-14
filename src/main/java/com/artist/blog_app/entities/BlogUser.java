@@ -1,16 +1,16 @@
 package com.artist.blog_app.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@Table(name = "users")
 public class BlogUser {
 
     @Id
@@ -26,4 +26,9 @@ public class BlogUser {
     private Integer age;
 
     private String gender;
+
+    @OneToMany(mappedBy = "blogUser",
+               cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+               fetch = FetchType.LAZY)
+    private List<Post> posts = new ArrayList<>();
 }
