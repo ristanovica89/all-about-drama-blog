@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+
 @Component
 @AllArgsConstructor
 public class PostMapper {
@@ -17,10 +18,6 @@ public class PostMapper {
     public PostDto toDto(Post post){
         return modelMapper.map(post, PostDto.class);
     }
-
-//    public Post toEntity(PostDto postDto){
-//        return  modelMapper.map(postDto, Post.class);
-//    }
 
     public Post toEntity(PostDto dto, BlogUser user, Category category) {
         Post post = modelMapper.map(dto, Post.class);

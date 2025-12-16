@@ -2,9 +2,9 @@ package com.artist.blog_app.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
@@ -32,7 +32,8 @@ public class Post {
             insertable = false,
             columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
     )
-    private Date addedDate;
+    @CreationTimestamp
+    private LocalDateTime addedDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
