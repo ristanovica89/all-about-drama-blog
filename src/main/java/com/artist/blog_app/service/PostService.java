@@ -52,6 +52,14 @@ public class PostService {
 
     }
 
+    public List<PostDto> getAllPostsByUserId(Integer userId){
+        return postRepository.findByBlogUserId(userId)
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+    }
+
+
     public List<PostDto> getAllPostsOfCategory(Category category){
         return postRepository.findByCategory(category)
                 .stream()

@@ -1,5 +1,6 @@
 package com.artist.blog_app.controllers;
 
+import com.artist.blog_app.payload.ApiResponse;
 import com.artist.blog_app.payload.PostDto;
 import com.artist.blog_app.service.PostService;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -14,6 +16,22 @@ import java.net.URI;
 public class PostController {
 
     private final PostService postService;
+
+    @GetMapping()
+    public ResponseEntity<List<PostDto>> getAllPosts(){
+
+        var allPosts = postService.getAllPosts();
+        return ResponseEntity
+                .ok(allPosts);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<PostDto>> getAllPostsByUserId(@PathVariable Integer userId){
+
+        var posts = postService.getAllPostsByUserId(userId);
+        return ResponseEntity
+                .ok(posts);
+    }
 
     @PostMapping("/users/{userId}/categories/{categoryId}")
     public ResponseEntity<PostDto> createPost(
@@ -27,4 +45,23 @@ public class PostController {
                 .created(URI.create("/posts/" + newPost.getId()))
                 .body(newPost);
     }
+
+    @PutMapping("{postId}")
+    public ResponseEntity<PostDto> updatePost(
+            @RequestBody PostDto postDto,
+            @PathVariable Integer postId
+    ){
+        var updatedPost = postService.updatePost(postDto, postId);
+
+        return ResponseEntity
+                .ok(updatedPost);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<ApiResponse> deletePostById(@PathVariable Integer id){
+        postService.deletePost(id);
+
+        return ResponseEntity.ok(new ApiResponse("Successfully deleted",true));
+    }
+
 }

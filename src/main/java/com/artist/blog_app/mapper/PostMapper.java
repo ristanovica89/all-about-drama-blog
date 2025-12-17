@@ -27,6 +27,7 @@ public class PostMapper {
     }
 
     public void updateEntity(PostDto dto, Post post) {
-        modelMapper.map(dto, post);
+        post.setTitle(dto.getTitle());
+        post.setContent(dto.getContent());
     }
 }

@@ -13,6 +13,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     Optional<Post> findPostByTitle(String title);
 
     List<Post> findByBlogUser(BlogUser blogUser);
+    List<Post> findByBlogUserId(Integer userId);
 
     List<Post> findByCategory(Category category);
 }
