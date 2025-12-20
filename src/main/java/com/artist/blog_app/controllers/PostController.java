@@ -26,14 +26,22 @@ public class PostController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<PostDto>> getAllPostsByUserId(@PathVariable Integer userId){
+    public ResponseEntity<List<PostDto>> getAllPostsUserId(@PathVariable Integer userId){
 
         var posts = postService.getAllPostsByUserId(userId);
         return ResponseEntity
                 .ok(posts);
     }
 
-    @PostMapping("/users/{userId}/categories/{categoryId}")
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<PostDto>> getAllPostsByCategoryId(@PathVariable Integer categoryId){
+
+        var posts = postService.getAllPostsByCategoryId(categoryId);
+        return ResponseEntity
+                .ok(posts);
+    }
+
+    @PostMapping("/user/{userId}/category/{categoryId}")
     public ResponseEntity<PostDto> createPost(
             @RequestBody  PostDto postDto,
             @PathVariable Integer userId,

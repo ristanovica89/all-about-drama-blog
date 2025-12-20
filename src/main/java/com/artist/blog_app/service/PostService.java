@@ -44,7 +44,10 @@ public class PostService {
         return mapper.toDto(post);
     }
 
-    public List<PostDto> getAllPostsFromUser(BlogUser user){
+    public List<PostDto> getAllPostsByUserId(Integer userId){
+
+        BlogUser user = blogUserRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User ","User Id",userId));
+
         return postRepository.findByBlogUser(user)
                 .stream()
                 .map(mapper::toDto)
@@ -52,15 +55,10 @@ public class PostService {
 
     }
 
-    public List<PostDto> getAllPostsByUserId(Integer userId){
-        return postRepository.findByBlogUserId(userId)
-                .stream()
-                .map(mapper::toDto)
-                .toList();
-    }
+    public List<PostDto> getAllPostsByCategoryId(Integer categoryId){
 
+        Category category = categoryRepository.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Category ","Category Id",categoryId));
 
-    public List<PostDto> getAllPostsOfCategory(Category category){
         return postRepository.findByCategory(category)
                 .stream()
                 .map(mapper::toDto)
