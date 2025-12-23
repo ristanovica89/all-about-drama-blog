@@ -49,7 +49,10 @@ public class BlogUserService {
     }
 
     public void deleteBlogUser(Integer id){
-        blogUserRepository.deleteById(id);
+
+        var blogUser = blogUserRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User ","UserId",id));
+
+        blogUserRepository.delete(blogUser);
     }
 
 }

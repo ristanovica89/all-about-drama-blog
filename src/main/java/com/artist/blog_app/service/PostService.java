@@ -79,7 +79,7 @@ public class PostService {
 
     public PostDto updatePost(PostDto postDto, Integer id){
         var existingPost = postRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Category ","Category Id",id));
+                .orElseThrow(() -> new ResourceNotFoundException("Post ","Post Id",id));
 
         mapper.updateEntity(postDto,existingPost);
         postRepository.save(existingPost);
@@ -90,7 +90,9 @@ public class PostService {
 
 
     public void deletePost(Integer id){
-        postRepository.deleteById(id);
+        var post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post ","Post Id",id));
+
+        postRepository.delete(post);
     }
 
 }
