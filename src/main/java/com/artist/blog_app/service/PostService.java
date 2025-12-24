@@ -10,6 +10,9 @@ import com.artist.blog_app.repository.BlogUserRepository;
 import com.artist.blog_app.repository.CategoryRepository;
 import com.artist.blog_app.repository.PostRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,26 +26,30 @@ public class PostService {
     private final CategoryRepository categoryRepository;
     private final PostMapper mapper;
 
-    public List<PostDto> getAllPosts(){
-        return postRepository.findAll()
+    public List<PostDto> getAllPosts(Integer pageNumber, Integer pageSize){
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Post> pagePost = postRepository.findAll(pageable);
+
+        return pagePost.getContent()
                 .stream()
                 .map(mapper::toDto)
                 .toList();
     }
 
-    public PostDto getPostById(Integer id){
-        var post = postRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Post ","Post Id",id));
-
-        return mapper.toDto(post);
-    }
-
-    public PostDto getPostByTitle(String title){
-        var post = postRepository.findPostByTitle(title)
-                .orElseThrow(() -> new ResourceNotFoundException("Post ","Post Id",title));
-
-        return mapper.toDto(post);
-    }
+//    public PostDto getPostById(Integer id){
+//        var post = postRepository.findById(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("Post ","Post Id",id));
+//
+//        return mapper.toDto(post);
+//    }
+//
+//    public PostDto getPostByTitle(String title){
+//        var post = postRepository.findPostByTitle(title)
+//                .orElseThrow(() -> new ResourceNotFoundException("Post ","Post Id",title));
+//
+//        return mapper.toDto(post);
+//    }
 
     public List<PostDto> getAllPostsByUserId(Integer userId){
 
