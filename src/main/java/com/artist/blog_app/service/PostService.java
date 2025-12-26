@@ -28,7 +28,7 @@ public class PostService {
 
     public List<PostDto> getAllPosts(Integer pageNumber, Integer pageSize){
 
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
         Page<Post> pagePost = postRepository.findAll(pageable);
 
         return pagePost.getContent()
