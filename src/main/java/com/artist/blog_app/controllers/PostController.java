@@ -2,13 +2,13 @@ package com.artist.blog_app.controllers;
 
 import com.artist.blog_app.payload.ApiResponse;
 import com.artist.blog_app.payload.PostDto;
+import com.artist.blog_app.payload.PostResponse;
 import com.artist.blog_app.service.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -18,8 +18,8 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping()
-    public ResponseEntity<List<PostDto>> getAllPosts(
-            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+    public ResponseEntity<PostResponse> getAllPosts(
+            @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5", required = false)   Integer pageSize){
 
         var allPosts = postService.getAllPosts(pageNumber, pageSize);
@@ -28,17 +28,24 @@ public class PostController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<PostDto>> getAllPostsUserId(@PathVariable Integer userId){
+    public ResponseEntity<PostResponse> getAllPostsUserId(
+            @PathVariable Integer userId,
+            @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false)   Integer pageSize){
 
-        var posts = postService.getAllPostsByUserId(userId);
+        var posts = postService.getAllPostsByUserId(userId, pageNumber, pageSize);
         return ResponseEntity
                 .ok(posts);
     }
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<PostDto>> getAllPostsByCategoryId(@PathVariable Integer categoryId){
+    public ResponseEntity<PostResponse> getAllPostsByCategoryId(
+            @PathVariable Integer categoryId,
+            @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false)   Integer pageSize
+    ){
 
-        var posts = postService.getAllPostsByCategoryId(categoryId);
+        var posts = postService.getAllPostsByCategoryId(categoryId,pageNumber, pageSize);
         return ResponseEntity
                 .ok(posts);
     }

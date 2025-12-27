@@ -6,6 +6,7 @@ import com.artist.blog_app.entities.Post;
 import com.artist.blog_app.exceptions.ResourceNotFoundException;
 import com.artist.blog_app.mapper.PostMapper;
 import com.artist.blog_app.payload.PostDto;
+import com.artist.blog_app.payload.PostResponse;
 import com.artist.blog_app.repository.BlogUserRepository;
 import com.artist.blog_app.repository.CategoryRepository;
 import com.artist.blog_app.repository.PostRepository;
@@ -26,15 +27,17 @@ public class PostService {
     private final CategoryRepository categoryRepository;
     private final PostMapper mapper;
 
-    public List<PostDto> getAllPosts(Integer pageNumber, Integer pageSize){
+    public PostResponse getAllPosts(Integer pageNumber, Integer pageSize){
 
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
         Page<Post> pagePost = postRepository.findAll(pageable);
 
-        return pagePost.getContent()
+        List<PostDto> postsDto =  pagePost.getContent()
                 .stream()
                 .map(mapper::toDto)
                 .toList();
+
+        return buildPostResponse(postsDto, pagePost);
     }
 
 //    public PostDto getPostById(Integer id){
@@ -51,25 +54,35 @@ public class PostService {
 //        return mapper.toDto(post);
 //    }
 
-    public List<PostDto> getAllPostsByUserId(Integer userId){
+    public PostResponse getAllPostsByUserId(Integer userId, Integer pageNumber, Integer pageSize){
 
         BlogUser user = blogUserRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User ","User Id",userId));
 
-        return postRepository.findByBlogUser(user)
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        Page<Post> pagePost = postRepository.findByBlogUser(user, pageable);
+
+        List<PostDto> postsDto = pagePost.getContent()
                 .stream()
                 .map(mapper::toDto)
                 .toList();
+
+        return buildPostResponse(postsDto, pagePost);
 
     }
 
-    public List<PostDto> getAllPostsByCategoryId(Integer categoryId){
+    public PostResponse getAllPostsByCategoryId(Integer categoryId, Integer pageNumber, Integer pageSize){
 
         Category category = categoryRepository.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Category ","Category Id",categoryId));
 
-        return postRepository.findByCategory(category)
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        Page<Post> pagePost = postRepository.findByCategory(category,pageable);
+
+       List<PostDto> postsDto = pagePost.getContent()
                 .stream()
                 .map(mapper::toDto)
                 .toList();
+
+        return buildPostResponse(postsDto, pagePost);
     }
 
 
@@ -102,4 +115,18 @@ public class PostService {
         postRepository.delete(post);
     }
 
+
+    // Building PostResponse helper method
+
+    private PostResponse buildPostResponse(List<PostDto> postsDto, Page<Post> pagePost){
+        PostResponse postResponse = new PostResponse();
+        postResponse.setContent(postsDto);
+        postResponse.setPageNumber(pagePost.getNumber());
+        postResponse.setPageSize(pagePost.getSize());
+        postResponse.setTotalElements(pagePost.getTotalElements());
+        postResponse.setTotalPages(pagePost.getTotalPages());
+        postResponse.setLastPage(pagePost.isLast());
+
+        return postResponse;
+    }
 }
