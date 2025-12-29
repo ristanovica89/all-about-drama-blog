@@ -19,10 +19,12 @@ public class PostController {
 
     @GetMapping()
     public ResponseEntity<PostResponse> getAllPosts(
-            @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false)   Integer pageSize){
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false)   Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "addedDate", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "desc", required = false) String sortDir){
 
-        var allPosts = postService.getAllPosts(pageNumber, pageSize);
+        var allPosts = postService.getAllPosts(pageNumber, pageSize, sortBy, sortDir);
         return ResponseEntity
                 .ok(allPosts);
     }
@@ -30,10 +32,12 @@ public class PostController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<PostResponse> getAllPostsUserId(
             @PathVariable Integer userId,
-            @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false)   Integer pageSize){
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false)   Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "addedDate", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "desc", required = false) String sortDir){
 
-        var posts = postService.getAllPostsByUserId(userId, pageNumber, pageSize);
+        var posts = postService.getAllPostsByUserId(userId, pageNumber, pageSize, sortBy, sortDir);
         return ResponseEntity
                 .ok(posts);
     }
@@ -41,11 +45,13 @@ public class PostController {
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<PostResponse> getAllPostsByCategoryId(
             @PathVariable Integer categoryId,
-            @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "5", required = false)   Integer pageSize
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false)   Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "addedDate", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "desc", required = false) String sortDir
     ){
 
-        var posts = postService.getAllPostsByCategoryId(categoryId,pageNumber, pageSize);
+        var posts = postService.getAllPostsByCategoryId(categoryId,pageNumber, pageSize, sortBy, sortDir);
         return ResponseEntity
                 .ok(posts);
     }

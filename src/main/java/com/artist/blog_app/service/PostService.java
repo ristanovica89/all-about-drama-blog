@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,9 +28,18 @@ public class PostService {
     private final CategoryRepository categoryRepository;
     private final PostMapper mapper;
 
-    public PostResponse getAllPosts(Integer pageNumber, Integer pageSize){
+    private static final List<String> ALLOWED_SORT_FIELDS =
+            List.of("addedDate", "title", "id");
 
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+    public PostResponse getAllPosts(Integer pageNumber, Integer pageSize, String sortBy, String sortDir){
+
+        sortBy = validateSortBy(sortBy);
+
+        Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? Sort.by(Sort.Order.asc(sortBy), Sort.Order.asc("id"))
+                : Sort.by(Sort.Order.desc(sortBy), Sort.Order.desc("id"));
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Post> pagePost = postRepository.findAll(pageable);
 
         List<PostDto> postsDto =  pagePost.getContent()
@@ -54,11 +64,17 @@ public class PostService {
 //        return mapper.toDto(post);
 //    }
 
-    public PostResponse getAllPostsByUserId(Integer userId, Integer pageNumber, Integer pageSize){
+    public PostResponse getAllPostsByUserId(Integer userId, Integer pageNumber, Integer pageSize, String sortBy, String sortDir){
 
         BlogUser user = blogUserRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User ","User Id",userId));
 
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        sortBy = validateSortBy(sortBy);
+
+        Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? Sort.by(Sort.Order.asc(sortBy), Sort.Order.asc("id"))
+                : Sort.by(Sort.Order.desc(sortBy), Sort.Order.desc("id"));
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Post> pagePost = postRepository.findByBlogUser(user, pageable);
 
         List<PostDto> postsDto = pagePost.getContent()
@@ -70,11 +86,17 @@ public class PostService {
 
     }
 
-    public PostResponse getAllPostsByCategoryId(Integer categoryId, Integer pageNumber, Integer pageSize){
+    public PostResponse getAllPostsByCategoryId(Integer categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortDir){
 
         Category category = categoryRepository.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Category ","Category Id",categoryId));
 
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+        sortBy = validateSortBy(sortBy);
+
+        Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? Sort.by(Sort.Order.asc(sortBy), Sort.Order.asc("id"))
+                : Sort.by(Sort.Order.desc(sortBy), Sort.Order.desc("id"));
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Post> pagePost = postRepository.findByCategory(category,pageable);
 
        List<PostDto> postsDto = pagePost.getContent()
@@ -128,5 +150,14 @@ public class PostService {
         postResponse.setLastPage(pagePost.isLast());
 
         return postResponse;
+    }
+
+    // Controlling method
+
+    private String validateSortBy(String sortBy) {
+        if (sortBy == null || !ALLOWED_SORT_FIELDS.contains(sortBy)) {
+            return "addedDate";
+        }
+        return sortBy;
     }
 }

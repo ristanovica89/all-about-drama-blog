@@ -25,13 +25,7 @@ public class Post {
 
     private String imgPath;
 
-    @Column(
-            name = "added_date",
-            nullable = false,
-            updatable = false,
-            insertable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-    )
+    @Column(name = "added_date", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime addedDate;
 
