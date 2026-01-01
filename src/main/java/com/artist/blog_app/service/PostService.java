@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -129,12 +130,14 @@ public class PostService {
         return mapper.toDto(existingPost);
     }
 
-
-
     public void deletePost(Integer id){
         var post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post ","Post Id",id));
 
         postRepository.delete(post);
+    }
+
+    public List<PostDto> searchPost(String keyword){
+        return null;
     }
 
 
