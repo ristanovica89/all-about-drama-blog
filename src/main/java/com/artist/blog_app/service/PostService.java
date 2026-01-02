@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,20 +49,6 @@ public class PostService {
 
         return buildPostResponse(postsDto, pagePost);
     }
-
-//    public PostDto getPostById(Integer id){
-//        var post = postRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Post ","Post Id",id));
-//
-//        return mapper.toDto(post);
-//    }
-//
-//    public PostDto getPostByTitle(String title){
-//        var post = postRepository.findPostByTitle(title)
-//                .orElseThrow(() -> new ResourceNotFoundException("Post ","Post Id",title));
-//
-//        return mapper.toDto(post);
-//    }
 
     public PostResponse getAllPostsByUserId(Integer userId, Integer pageNumber, Integer pageSize, String sortBy, String sortDir){
 
@@ -108,6 +93,24 @@ public class PostService {
         return buildPostResponse(postsDto, pagePost);
     }
 
+    public PostResponse searchPosts(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortDir){
+
+        sortBy = validateSortBy(sortBy);
+
+        Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? Sort.by(Sort.Order.asc(sortBy), Sort.Order.asc("id"))
+                : Sort.by(Sort.Order.desc(sortBy), Sort.Order.desc("id"));
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Post> pagePost = postRepository.searchPosts(pageable, keyword);
+
+        List<PostDto> postsDto =  pagePost.getContent()
+                .stream()
+                .map(mapper::toDto)
+                .toList();
+
+        return buildPostResponse(postsDto, pagePost);
+    }
 
     public PostDto createPost(PostDto postDto, Integer userId, Integer categoryId){
         BlogUser blogUser = blogUserRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User ","User Id",userId));
@@ -136,9 +139,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public List<PostDto> searchPost(String keyword){
-        return null;
-    }
+
 
 
     // Building PostResponse helper method

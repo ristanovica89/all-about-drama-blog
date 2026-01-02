@@ -56,6 +56,20 @@ public class PostController {
                 .ok(posts);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<PostResponse> searchPosts(
+            @RequestParam String keyword,
+            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "5", required = false)   Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "addedDate", required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "desc", required = false) String sortDir){
+
+        var allPosts = postService.searchPosts(keyword, pageNumber, pageSize, sortBy, sortDir);
+        return ResponseEntity
+                .ok(allPosts);
+    }
+
+
     @PostMapping("/user/{userId}/category/{categoryId}")
     public ResponseEntity<PostDto> createPost(
             @RequestBody  PostDto postDto,
