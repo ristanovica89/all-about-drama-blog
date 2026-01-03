@@ -28,7 +28,7 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/admin/all")
     public  ResponseEntity<CommentResponse> getAllComments(
             @RequestParam Integer postId,
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
