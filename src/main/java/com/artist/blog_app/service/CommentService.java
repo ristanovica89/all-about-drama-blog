@@ -69,6 +69,30 @@ public class CommentService {
                 .toList();
     }
 
+    public CommentDto createComment(Integer postId, CommentDto commentDto){
+        Post existingPost = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post ","Post Id",postId));
+
+        var comment = mapper.toEntity(commentDto,existingPost);
+        commentRepository.save(comment);
+
+        return mapper.toDto(comment);
+
+    }
+
+    public CommentDto createReply(Integer postId, CommentDto commentDto, Integer parentId){
+        Post existingPost = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post ","Post Id",postId));
+        Comment existingComment = commentRepository.findById(parentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment ","Comment Id", parentId));
+
+        var reply = mapper.toEntity(commentDto, existingPost, existingComment);
+        commentRepository.save(reply);
+
+        return mapper.toDto(reply);
+
+    }
+
     private CommentResponse buildCommentResponse(List<CommentDto> commentsDto, Page<Comment> pageRootComment){
         CommentResponse commentResponse = new CommentResponse();
         commentResponse.setContent(commentsDto);

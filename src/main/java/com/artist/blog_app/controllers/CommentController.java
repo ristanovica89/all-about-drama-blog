@@ -39,9 +39,9 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
-    @GetMapping("/{rootId}/replies")
-    public ResponseEntity<List<CommentDto>> getReplies(@PathVariable Integer rootId){
-        var replies = commentService.getRepliesForComment(rootId);
+    @GetMapping("/{parentId}/replies")
+    public ResponseEntity<List<CommentDto>> getReplies(@PathVariable Integer parentId){
+        var replies = commentService.getRepliesForComment(parentId);
 
         return ResponseEntity.ok(replies);
     }

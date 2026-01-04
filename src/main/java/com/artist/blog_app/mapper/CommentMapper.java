@@ -30,6 +30,13 @@ public class CommentMapper {
         return comment;
     }
 
+    public Comment toEntity(CommentDto dto, Post post) {
+        Comment comment = new Comment();
+        comment.setContent(dto.getContent());
+        comment.setPost(post);
+        return comment;
+    }
+
     public void updateEntity(CommentDto dto, Comment comment) {
         if (dto.getContent() != null) {
             comment.setContent(dto.getContent());
