@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @AllArgsConstructor
@@ -17,9 +18,9 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @GetMapping()
+    @GetMapping("/post/{postId}")
     public ResponseEntity<CommentResponse> getRootComments(
-            @RequestParam Integer postId,
+            @PathVariable Integer postId,
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "50", required = false) Integer pageSize
     ) {
@@ -46,5 +47,27 @@ public class CommentController {
         return ResponseEntity.ok(replies);
     }
 
+    @PostMapping("/post/{postId}")
+    public ResponseEntity<CommentDto> createComment(
+            @PathVariable Integer postId,
+            @RequestBody CommentDto commentDto){
+        var newComment = commentService.createComment(postId, commentDto);
+
+        return ResponseEntity
+                .created(URI.create("/comments/" + newComment.getId()))
+                .body(newComment);
+    }
+
+    @PostMapping("/post/{postId}/reply-to/{parentId}")
+    public ResponseEntity<CommentDto> createReply(
+            @PathVariable Integer postId,
+            @RequestBody CommentDto commentDto,
+            @PathVariable Integer parentId){
+        var newReply = commentService.createReply(postId, commentDto, parentId);
+
+        return ResponseEntity
+                .created(URI.create("/comments/" + newReply.getId()))
+                .body(newReply);
+    }
 
 }
