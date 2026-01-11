@@ -19,7 +19,6 @@ public class CustomUserDetailService implements UserDetailsService {
     @NonNull
     public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
 
-
         return blogUserRepository.findByEmail(email)
                 .orElseThrow(()-> new ResourceNotFoundException("User", "email: " + email, 0));
 
