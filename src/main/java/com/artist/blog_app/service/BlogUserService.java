@@ -6,6 +6,7 @@ import com.artist.blog_app.mapper.BlogUserMapper;
 import com.artist.blog_app.payload.BlogUserDto;
 import com.artist.blog_app.repository.BlogUserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +17,11 @@ public class BlogUserService {
 
     private final BlogUserRepository blogUserRepository;
     private final BlogUserMapper mapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public BlogUserDto createBlogUser(BlogUserDto user){
-        BlogUser blogUser = mapper.toEntity(user);
+    public BlogUserDto createBlogUser(BlogUserDto blogUserDto){
+        BlogUser blogUser = mapper.toEntity(blogUserDto);
+        blogUser.setPassword(passwordEncoder.encode(blogUserDto.getPassword()));
         blogUserRepository.save(blogUser);
 
         return mapper.toDto(blogUser);
